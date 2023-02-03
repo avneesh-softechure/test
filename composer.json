@@ -1,0 +1,8 @@
+{
+    "name": "softechure/avneesh",
+    "autoload": {
+        "psr-0" : {
+            "Softechure\\Avneesh" : "src"
+        }
+    }
+}
