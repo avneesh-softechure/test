@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laravel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
 
 </head>
 
@@ -15,21 +16,25 @@
     <div class="container mt-5">
 
         <h2 class="mb-2">User List</h2>
-        <table class="table table-bordered mb-4" id="usersTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Description</th>
-                    <th>Role</th>
-                    <th>Profile Picture</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="card mb-4">
+            <div class="card-body">
 
+                <table class="table " id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Description</th>
+                            <th>Role</th>
+                            <th>Profile Picture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <div class="mb-3" id="responseMessage" style="display: none;">
             <div class="alert" role="alert"></div>
@@ -74,40 +79,42 @@
 
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <script>
         $(document).ready(function() {
+
+            var table = $('#usersTable').DataTable();
 
             function loadUsers() {
                 $.ajax({
                     url: '/api/users',
                     method: 'GET',
                     success: function(response) {
-                        var tableBody = $('#usersTable tbody');
-                        tableBody.empty();
+                        table.clear();
 
                         if (response.success) {
                             var users = response.data;
 
                             if (users.length === 0) {
-                                tableBody.append(
-                                    '<tr><td colspan="6" class="text-center">No records found</td></tr>'
-                                );
+                                table.row.add(['', '', '', 'No records found', '', '']).draw();
                             } else {
                                 users.forEach(function(user) {
                                     var profilePic = user.profile_pic ?
                                         `<img src="/storage/${user.profile_pic}" width="50" height="50" />` :
                                         'N/A';
-                                    var row = `
-                            <tr>
-                                <td>${user.id}</td>
-                                <td>${user.name}</td>
-                                <td>${user.email}</td>
-                                <td>${user.description}</td>
-                                <td>${user.role}</td>
-                                <td>${profilePic}</td>
-                            </tr>
-                        `;
-                                    tableBody.append(row);
+                                    var row = [
+                                        user.id,
+                                        user.name,
+                                        user.email,
+                                        user.desc,
+                                        user.role,
+                                        profilePic
+                                    ];
+                                    table.row.add(row).draw();
                                 });
                             }
                         } else {
@@ -154,7 +161,6 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

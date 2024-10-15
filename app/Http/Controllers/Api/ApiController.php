@@ -26,7 +26,7 @@ class ApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email', // Check email uniqueness
+            'email' => 'required|email|max:255|unique:users,email',
             'desc' => 'required|string|max:1000',
             'role' => 'required|integer',
             'profile_pic' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
